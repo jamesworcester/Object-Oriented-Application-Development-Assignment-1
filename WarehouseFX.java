@@ -90,7 +90,11 @@ public class WarehouseFX extends Application {
 		/* TODO 2-05 - TO COMPLETE ****************************************
 		 * add table columns to the table view create above
 		 */
-
+		tableView.getColumns().add(idColumn);
+		tableView.getColumns().add(itemNameColumn);
+		tableView.getColumns().add(quantityColumn);
+		tableView.getColumns().add(sectionColumn);
+		tableView.getColumns().add(daysAgoColumn);
 
 		//	Attach table data to the table view
 		tableView.setItems(tableData);
