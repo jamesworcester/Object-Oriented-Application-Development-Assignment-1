@@ -159,6 +159,7 @@ public class WarehouseDSC {
 		/* TODO 1-08 - TO COMPLETE ****************************************
 		 * - resultSet to execute the statement query
 		 */	
+		ResultSet rs = statement.executeQuery(queryString);
 
 		List<Product> products = new ArrayList<Product>();
 
