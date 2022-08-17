@@ -84,9 +84,7 @@ public class WarehouseDSC {
 			 */
 			boolean expires = rs.getBoolean(2);
 			item = new Item(name, expires);
-
 		}	
-
 
 		return item;
 	}
@@ -100,7 +98,9 @@ public class WarehouseDSC {
 		 * - resultSet to execute the preparedStatement query
 		 * - iterate through the resultSet result
 		 */	
-
+		preparedStatement = connection.prepareStatement(queryString);
+		preparedStatement.setInt(1, id);
+		ResultSet rs = preparedStatement.executeQuery();
 
 		Product product = null;
 
