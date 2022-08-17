@@ -131,6 +131,18 @@ public class WarehouseFX extends Application {
 		 * filter container - part 1
 		 * add all filter related UI elements you identified
 		 */
+		TextField filterTF = new TextField();
+		Label filterLB = new Label("Filter By:");
+
+		String choiceITEM = "ITEM";
+		String choiceSECTION = "SECTION";
+		String choiceBOUGHT_DAYS_AGO = "BOUGHT_DAYS_AGO";
+		ChoiceBox<String> choiceBox = new ChoiceBox<String>();
+		choiceBox.getItems().addAll(choiceITEM, choiceSECTION, choiceBOUGHT_DAYS_AGO);
+		choiceBox.setValue(choiceITEM);
+
+		CheckBox checkBox = new CheckBox("Show Expire Only");
+	
 
 		/* TODO 2-09 - TO COMPLETE ****************************************
 		 * filter container - part 2:
@@ -138,6 +150,12 @@ public class WarehouseFX extends Application {
 		 *   text field vlaue and to enable the "Show Expire Only" CheckBox
 		 *   if "BOUGHT_DAYS_AGO" is selected
 		 */
+		choiceBox.getSelectionModel().selectedIndexProperty().addListener(
+			(ov, oldValue, newValue) ->
+			{
+				Sys
+			}
+		);
 
 		/* TODO 2-10 - TO COMPLETE ****************************************
 		 * filter container - part 2:
