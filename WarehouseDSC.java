@@ -170,6 +170,20 @@ public class WarehouseDSC {
 		 *   item table (use searchItem method)
 		 * - pay attention about parsing the date string to LocalDate
 		 */	
+		while (rs.next())
+		{
+			int id = rs.getInt(1);
+			Item item = searchItem(rs.getString(2));
+			if(item == null) {
+				//may need to add more here to handle null values
+				return null;
+			}
+			LocalDate date = LocalDate.parse(rs.getString(3));
+			int quantity = rs.getInt(4);
+			SECTION section = SECTION.valueOf(rs.getString(5));
+
+			products.add(new Product(id, item, date, quantity, section));
+		}
 
 
 		return products;
