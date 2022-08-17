@@ -5,6 +5,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
 import java.util.*;
+
+import WarehouseDSC.SECTION;
+
 import java.io.*;
 import javafx.collections.*;
 import javafx.collections.transformation.*;
@@ -157,6 +160,7 @@ public class WarehouseFX extends Application {
 				if(choiceBox.getValue() == choiceBOUGHT_DAYS_AGO)
 				{
 					filterTF.clear();
+					filterTF.requestFocus();
 					checkBox.setDisable(false);
 				}
 			}
@@ -171,7 +175,12 @@ public class WarehouseFX extends Application {
 		 * - setOnAction on the "Show Expire Only" Checkbox to clear and 
 		 *   set focus to the filter text field
 		 */
-		
+		checkBox.setOnAction((e) ->
+		{
+			filterTF.clear();
+			filterTF.requestFocus();
+		});
+
 
 		/* TODO 2-11 - TO COMPLETE ****************************************
 		 * filter container - part 3:
@@ -181,7 +190,42 @@ public class WarehouseFX extends Application {
 		 * - set items of table view to be sorted list
 		 * - set a change listener to text field to set the filter predicate
 		 *   of filtered list
-		 */		
+		 */	
+		
+		 FilteredList<Product> filteredList = new FilteredList<>(tableData, p -> true);
+		 SortedList<Product> sortedList = new SortedList<>(filteredList);
+		 sortedList.comparatorProperty().bind(tableView.comparatorProperty());
+		 tableView.setItems(sortedList);
+		 filterTF.textProperty().addListener((observable, oldValue, newValue) ->
+		 {
+			filteredList.setPredicate(product ->
+			{
+				if(newValue == null || newValue.isEmpty())
+				{
+					return true;
+				}
+
+				String filterString = newValue.toUpperCase();
+
+				if(choiceBox.getValue() == choiceITEM && product.getItemName().toUpperCase().contains(filterString))
+				{
+					return true;
+				}
+				
+				
+				if(choiceBox.getValue() == choiceSECTION && product.getSection().toString().toUpperCase().contains(filterString))
+				{
+					return true;
+				}
+
+				if(choiceBox.getValue() == choiceBOUGHT_DAYS_AGO  && product.getDateStr().toUpperCase().contains(filterString))
+				{
+					return true;
+				}
+
+				return false;
+			});
+		 });
 
 
 		/* TODO 2-12 - TO COMPLETE ****************************************
@@ -192,7 +236,9 @@ public class WarehouseFX extends Application {
 		 * - UPDATE ONE and DELETE buttons action need to check if a
 		 *   table view row has been selected first before doing their
 		 *   action; hint: should you also use an Alert confirmation?
-		 */		
+		 */	
+
+		 	
 
 		/* TODO 2-13 - TO COMPLETE ****************************************
 		 * add input controls and container(s)
