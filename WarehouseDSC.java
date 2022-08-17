@@ -203,12 +203,19 @@ public class WarehouseDSC {
 		}
 
 
-		String command = "INSERT INTO Product VALUES(?, ?, ?, ?, ?)";
+		//String command = "INSERT INTO Product VALUES(?, ?, ?, ?, ?)";
+		String command = "INSERT INTO Product VALUES(default, ?, ?, ?, ?)";
 
 		/* TODO 1-10 - TO COMPLETE ****************************************
 		 * - preparedStatement to add arguments to the queryString
 		 * - resultSet to executeUpdate the preparedStatement query
 		 */
+		preparedStatement = connection.prepareStatement(command);
+		preparedStatement.setString(2, name);
+		preparedStatement.setString(3, dateStr);
+		preparedStatement.setInt(4, quantity);
+		preparedStatement.setString(5, section.toString());
+		preparedStatement.executeUpdate();
 
 		// retrieving & returning last inserted record id
 		ResultSet rs = statement.executeQuery("SELECT LAST_INSERT_ID()");
