@@ -133,6 +133,7 @@ public class WarehouseDSC {
 		/* TODO 1-06 - TO COMPLETE ****************************************
 		 * - resultSet to execute the statement query
 		 */	
+		ResultSet rs = statement.executeQuery(queryString);
 
 		List<Item> items = new ArrayList<Item>();
 
@@ -140,6 +141,7 @@ public class WarehouseDSC {
 		 * - iterate through the resultSet result, create intance of Item
 		 *   and add to list items
 		 */	
+		
 
 		return items;
 	}
