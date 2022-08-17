@@ -103,6 +103,16 @@ public class WarehouseFX extends Application {
 		/* TODO 2-06 - TO COMPLETE ****************************************
 		 * set minimum and maximum width to the table view and each columns
 		 */
+		idColumn.setMinWidth(50);
+		idColumn.setMaxWidth(50);
+		itemNameColumn.setMinWidth(150);
+		itemNameColumn.setMaxWidth(150);
+		quantityColumn.setMinWidth(50);
+		quantityColumn.setMaxWidth(50);
+		sectionColumn.setMinWidth(100);
+		sectionColumn.setMaxWidth(100);
+		daysAgoColumn.setMinWidth(100);
+		daysAgoColumn.setMaxWidth(100);
 
 
 		/* TODO 2-07 - TO COMPLETE ****************************************
