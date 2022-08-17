@@ -75,7 +75,6 @@ public class WarehouseDSC {
 		preparedStatement.setString(1, name);
 		ResultSet rs = preparedStatement.executeQuery();
 
-
 		Item item = null;
 
 		if (rs.next()) { // i.e. the item exists
@@ -83,7 +82,8 @@ public class WarehouseDSC {
 			/* TODO 1-03 - TO COMPLETE ****************************************
 			 * - if resultSet has result, get data and create an Item instance
 			 */
-					
+			boolean expires = rs.getBoolean(2);
+			item = new Item(name, expires);
 
 		}	
 
