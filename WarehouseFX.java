@@ -140,6 +140,7 @@ public class WarehouseFX extends Application {
 		ChoiceBox<String> choiceBox = new ChoiceBox<String>();
 		choiceBox.getItems().addAll(choiceITEM, choiceSECTION, choiceBOUGHT_DAYS_AGO);
 		choiceBox.setValue(choiceITEM);
+		choiceBox.setDisable(true);
 
 		CheckBox checkBox = new CheckBox("Show Expire Only");
 	
@@ -153,7 +154,11 @@ public class WarehouseFX extends Application {
 		choiceBox.getSelectionModel().selectedIndexProperty().addListener(
 			(ov, oldValue, newValue) ->
 			{
-				Sys
+				if(choiceBox.getValue() == choiceBOUGHT_DAYS_AGO)
+				{
+					filterTF.clear();
+					checkBox.setDisable(false);
+				}
 			}
 		);
 
@@ -166,6 +171,7 @@ public class WarehouseFX extends Application {
 		 * - setOnAction on the "Show Expire Only" Checkbox to clear and 
 		 *   set focus to the filter text field
 		 */
+		
 
 		/* TODO 2-11 - TO COMPLETE ****************************************
 		 * filter container - part 3:
