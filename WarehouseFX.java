@@ -51,6 +51,13 @@ public class WarehouseFX extends Application {
 		/* TODO 2-03 - TO COMPLETE ****************************************
 		 * currentThread uncaught exception handler
 		 */
+		Thread.currentThread().setUncaughtExceptionHandler((thread, exception) ->
+		{
+			System.out.println("ERROR: " + exception);
+			Alert alert = new Alert(Alert.AlertType.INFORMATION);
+			alert.setContentText("ERROR: " + exception);
+			alert.showAndWait();
+		});
 	}
 
 	public void build(Stage stage) throws Exception {
