@@ -66,7 +66,8 @@ public class WarehouseFX extends Application {
 		ObservableList<Product> tableData = FXCollections.observableArrayList();
 
 		// Define table columns
-		TableColumn<Product, String> idColumn = new TableColumn<Product, String>("Id");
+		TableColumn<Product, Integer> idColumn = new TableColumn<Product, Integer>("Id");
+		//TableColumn<Product, String> idColumn = new TableColumn<Product, String>("Id");
 		TableColumn<Product, String> itemNameColumn = new TableColumn<Product, String>("Item");
 		TableColumn<Product, Integer> quantityColumn = new TableColumn<Product, Integer>("QTY");
 		TableColumn<Product, String> sectionColumn = new TableColumn<Product, String>("Section");
@@ -76,7 +77,11 @@ public class WarehouseFX extends Application {
 		 * for each column defined, call their setCellValueFactory method 
 		 * using an instance of PropertyValueFactory
 		 */
-
+		idColumn.setCellValueFactory(new PropertyValueFactory<Product, Integer>("Id"));
+		itemNameColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("Item"));
+		quantityColumn.setCellValueFactory(new PropertyValueFactory<Product, Integer>("QTY"));
+		sectionColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("Section"));
+		daysAgoColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("Bought"));
 
 		// Create the table view and add table columns to it
 		TableView<Product> tableView = new TableView<Product>();
