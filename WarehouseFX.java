@@ -33,6 +33,8 @@ public class WarehouseFX extends Application {
 		 * call the data source controller database connect method
 		 * NOTE: that database connect method throws exception
 		 */
+		warehouseDSC.connect();
+		
 	}
 
 	public void start(Stage stage) throws Exception {
