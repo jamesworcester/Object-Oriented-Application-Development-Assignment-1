@@ -115,7 +115,7 @@ public class WarehouseDSC {
 			Item item = searchItem(rs.getString(2));
 			if(item == null) {
 				// may need to add more here to handle null values
-				throw new Exception("Product with id '"+id+"' does not have an associated Item name");
+				throw new Exception("Exception: Product with id '"+id+"' does not have an associated Item name");
 			}
 			LocalDate date = LocalDate.parse(rs.getString(3));
 			int quantity = rs.getInt(4);
@@ -176,7 +176,7 @@ public class WarehouseDSC {
 			Item item = searchItem(rs.getString(2));
 			if(item == null) {
 				//may need to add more here to handle null values
-				throw new Exception("Product with id '"+id+"' does not have an associated Item name");
+				throw new Exception("Exception: Product with id '"+id+"' does not have an associated Item name");
 			}
 			LocalDate date = LocalDate.parse(rs.getString(3));
 			int quantity = rs.getInt(4);
@@ -199,7 +199,7 @@ public class WarehouseDSC {
 		Item item = searchItem(name);
 		if(item == null)
 		{
-			throw new Exception("No Item with name '"+name+"' exists in the item table");
+			throw new Exception("Exception: No Item with name '"+name+"' exists in the item table");
 		}
 
 
@@ -235,7 +235,7 @@ public class WarehouseDSC {
 		Product product = searchProduct(id);
 		if(product.getQuantity() <= 1)
 		{
-			throw new Exception("The product with '"+id+"' has a quantity less than or equal to 1");
+			throw new Exception("Exception: The product with '"+id+"' has a quantity less than or equal to 1");
 		}
 
 		String queryString = 
@@ -252,6 +252,16 @@ public class WarehouseDSC {
 		 *
 		 * NOTE: method should return instance of product
 		 */	
+		preparedStatement = connection.prepareStatement(queryString);
+		preparedStatement.setInt(1, id);
+		try {
+			preparedStatement.executeUpdate();
+		}
+		catch (Exception e){
+			new Exception("Exception: The update did not effect affect a row");
+		}
+		Product product_updated = searchProduct(id);
+		return product_updated;
 
 	}
 
