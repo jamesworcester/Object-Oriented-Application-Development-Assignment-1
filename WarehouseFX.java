@@ -119,7 +119,7 @@ public class WarehouseFX extends Application {
 		 * call data source controller get all products method to add
 		 * all products to table data observable list
 		 */
-	
+		tableData.addAll(warehouseDSC.getAllProducts());
 
 		// =====================================================
 		// ADD the remaining UI elements
