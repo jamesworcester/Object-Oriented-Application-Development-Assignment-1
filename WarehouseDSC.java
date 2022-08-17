@@ -141,7 +141,13 @@ public class WarehouseDSC {
 		 * - iterate through the resultSet result, create intance of Item
 		 *   and add to list items
 		 */	
-		
+		while (rs.next())
+		{
+			String name = rs.getString(1);
+			Boolean expires = rs.getBoolean(2);
+
+			items.add(new Item(name, expires));
+		}
 
 		return items;
 	}
