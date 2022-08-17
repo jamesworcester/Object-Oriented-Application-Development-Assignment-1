@@ -5,9 +5,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
 import java.util.*;
-
-import WarehouseDSC.SECTION;
-
 import java.io.*;
 import javafx.collections.*;
 import javafx.collections.transformation.*;
