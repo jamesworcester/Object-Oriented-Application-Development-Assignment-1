@@ -44,7 +44,7 @@ public class WarehouseDSC {
 			 */			
 			String url = "jdbc:mysql://localhost:3306/warehousedb";
 			String user = "root";
-			String password = "1234";
+			String password = "password";
 
 			connection = DriverManager.getConnection(url, user, password);
 			statement = connection.createStatement();
@@ -71,6 +71,9 @@ public class WarehouseDSC {
 		 * - resultSet to execute the preparedStatement query
 		 * - iterate through the resultSet result
 		 */	
+		preparedStatement = connection.prepareStatement(queryString);
+		preparedStatement.setString(1, name);
+		ResultSet rs = preparedStatement.executeQuery();
 
 
 		Item item = null;
@@ -79,7 +82,8 @@ public class WarehouseDSC {
 
 			/* TODO 1-03 - TO COMPLETE ****************************************
 			 * - if resultSet has result, get data and create an Item instance
-			 */		
+			 */
+					
 
 		}	
 
