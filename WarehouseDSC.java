@@ -232,7 +232,11 @@ public class WarehouseDSC {
 		 * - check if has quantity is greater one; if not throw exception
 		 *   with adequate error message
 		 */		
-
+		Product product = searchProduct(id);
+		if(product.getQuantity() <= 1)
+		{
+			throw new Exception("The product with '"+id+"' has a quantity less than or equal to 1");
+		}
 
 		String queryString = 
 			"UPDATE product " +
