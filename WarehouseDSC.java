@@ -115,7 +115,7 @@ public class WarehouseDSC {
 			Item item = searchItem(rs.getString(2));
 			if(item == null) {
 				// may need to add more here to handle null values
-				return null;
+				throw new Exception("Product with id '"+id+"' does not have an associated Item name");
 			}
 			LocalDate date = LocalDate.parse(rs.getString(3));
 			int quantity = rs.getInt(4);
@@ -176,7 +176,7 @@ public class WarehouseDSC {
 			Item item = searchItem(rs.getString(2));
 			if(item == null) {
 				//may need to add more here to handle null values
-				return null;
+				throw new Exception("Product with id '"+id+"' does not have an associated Item name");
 			}
 			LocalDate date = LocalDate.parse(rs.getString(3));
 			int quantity = rs.getInt(4);
@@ -184,7 +184,6 @@ public class WarehouseDSC {
 
 			products.add(new Product(id, item, date, quantity, section));
 		}
-
 
 		return products;
 	}
@@ -197,6 +196,12 @@ public class WarehouseDSC {
 		
 		// NOTE: should we check if itemName (argument name) exists in item table?
 		//		--> adding a product with a non-existing item name should through an exception
+		Item item = searchItem(name);
+		if(item == null)
+		{
+			throw new Exception("No Item with name '"+name+"' exists in the item table");
+		}
+
 
 		String command = "INSERT INTO Product VALUES(?, ?, ?, ?, ?)";
 
