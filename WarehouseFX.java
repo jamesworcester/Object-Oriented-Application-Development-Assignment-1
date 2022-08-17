@@ -34,7 +34,7 @@ public class WarehouseFX extends Application {
 		 * NOTE: that database connect method throws exception
 		 */
 		warehouseDSC.connect();
-		
+
 	}
 
 	public void start(Stage stage) throws Exception {
@@ -44,6 +44,8 @@ public class WarehouseFX extends Application {
 		 * - set application title
 		 * - show the stage
 		 */
+		stage.setTitle("What's in My Warehouse");
+		stage.show();
 
 
 		/* TODO 2-03 - TO COMPLETE ****************************************
