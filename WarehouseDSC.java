@@ -278,6 +278,17 @@ public class WarehouseDSC {
 		 * NOTE: method should return int: the return value of a
 		 *		 stetement.executeUpdate(...) on a DELETE query
 		 */	
+		Product product = searchProduct(id);
+		if(product == null)
+		{
+			throw new Exception("Exception: No product with ID:'"+id+"' exists in the Product table");
+		}
+		else
+		{
+			preparedStatement = connection.prepareStatement(queryString);
+			preparedStatement.setInt(1, id);
+			return preparedStatement.executeUpdate();
+		}
 
 	}
 
