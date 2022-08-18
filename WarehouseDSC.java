@@ -117,7 +117,7 @@ public class WarehouseDSC {
 				// may need to add more here to handle null values
 				throw new Exception("Exception: Product with id '"+id+"' does not have an associated Item name");
 			}
-			LocalDate date = LocalDate.parse(rs.getString(3));
+			LocalDate date = LocalDate.parse(rs.getString(3), dtf);
 			int quantity = rs.getInt(4);
 			SECTION section = SECTION.valueOf(rs.getString(5));
 			
@@ -178,7 +178,7 @@ public class WarehouseDSC {
 				//may need to add more here to handle null values
 				throw new Exception("Exception: Product with id '"+id+"' does not have an associated Item name");
 			}
-			LocalDate date = LocalDate.parse(rs.getString(3));
+			LocalDate date = LocalDate.parse(rs.getString(3), dtf);
 			int quantity = rs.getInt(4);
 			SECTION section = SECTION.valueOf(rs.getString(5));
 
