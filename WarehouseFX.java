@@ -44,6 +44,7 @@ public class WarehouseFX extends Application {
 		 * - set application title
 		 * - show the stage
 		 */
+		build(stage);
 		stage.setTitle("What's in My Warehouse");
 		stage.show();
 
@@ -140,9 +141,9 @@ public class WarehouseFX extends Application {
 		ChoiceBox<String> choiceBox = new ChoiceBox<String>();
 		choiceBox.getItems().addAll(choiceITEM, choiceSECTION, choiceBOUGHT_DAYS_AGO);
 		choiceBox.setValue(choiceITEM);
-		choiceBox.setDisable(true);
 
 		CheckBox checkBox = new CheckBox("Show Expire Only");
+		checkBox.setDisable(true);
 	
 
 		/* TODO 2-09 - TO COMPLETE ****************************************
@@ -156,9 +157,14 @@ public class WarehouseFX extends Application {
 			{
 				if(choiceBox.getValue() == choiceBOUGHT_DAYS_AGO)
 				{
+					checkBox.setDisable(false);
 					filterTF.clear();
 					filterTF.requestFocus();
-					checkBox.setDisable(false);
+					
+				}
+				else
+				{
+					checkBox.setDisable(true);
 				}
 			}
 		);
@@ -234,7 +240,19 @@ public class WarehouseFX extends Application {
 		 *   table view row has been selected first before doing their
 		 *   action; hint: should you also use an Alert confirmation?
 		 */	
+		Button AddBT = new Button("ADD");
+		Button UpdateOneBT = new Button("UPDATE ONE");
+		Button DeleteBT = new Button("DELETE");
 
+		List<Item> items = warehouseDSC.getAllItems();
+		ComboBox<Item> comboBox = new ComboBox<Item>();
+		comboBox.getItems().addAll(items);
+		comboBox.setVisible(false);
+		
+		AddBT.setOnAction(e ->
+		{
+			comboBox.setVisible(true);
+		});
 		 	
 
 		/* TODO 2-13 - TO COMPLETE ****************************************
@@ -254,7 +272,11 @@ public class WarehouseFX extends Application {
 		// SET UP the Stage
 		// =====================================================================
 		// Create scene and set stage
+		HBox filterHBox = new HBox(filterTF, filterLB, choiceBox, checkBox);
+
 		VBox root = new VBox();
+		root.getChildren().add(filterHBox);
+		root.getChildren().add(tableView);
 
 		/* TODO 2-14 - TO COMPLETE ****************************************
 		 * - add all your containers, controls to the root
