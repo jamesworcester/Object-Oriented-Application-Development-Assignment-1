@@ -59,7 +59,7 @@ INSERT INTO `product` VALUES (5,'Frozen Yogurt','16/08/2022',1,'FREEZER'),
 (33,'Beef','24/08/2022',3,'MEAT'),(23,'Milk', '29/08/2022', 8, 'COOLING'),  
 (53,'Oranges', '25/08/2022', 100, 'CRISPER'),
 (4,'Cabbage', '29/08/2022', 20, 'CRISPER'),
-(7,'Broccoli', '27/08/2022', 12, 'CRISPER '),(18,'Fish', '29/08/2022',10,'MEAT'); 
+(7,'Broccoli', '27/08/2022', 12, 'CRISPER'),(18,'Fish', '29/08/2022',10,'MEAT'); 
        
 
 UNLOCK TABLES;
