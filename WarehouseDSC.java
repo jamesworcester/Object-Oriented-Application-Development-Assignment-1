@@ -204,18 +204,30 @@ public class WarehouseDSC {
 
 
 		//String command = "INSERT INTO Product VALUES(?, ?, ?, ?, ?)";
-		String command = "INSERT INTO Product VALUES(default, ?, ?, ?, ?)";
+		String command = "INSERT INTO product (itemName, date, quantity, section) " +
+				"VALUES(?, ?, ?, ?)";
 
 		/* TODO 1-10 - TO COMPLETE ****************************************
 		 * - preparedStatement to add arguments to the queryString
 		 * - resultSet to executeUpdate the preparedStatement query
 		 */
-		preparedStatement = connection.prepareStatement(command);
-		preparedStatement.setString(2, name);
-		preparedStatement.setString(3, dateStr);
-		preparedStatement.setInt(4, quantity);
-		preparedStatement.setString(5, section.toString());
+		//preparedStatement = connection.prepareStatement(command);
+		preparedStatement = connection.prepareStatement(command, Statement.RETURN_GENERATED_KEYS);
+
+		//prepared statement auto_increment id sql database
+
+		
+
+		//preparedStatement.setInt(1, 256);
+		preparedStatement.setString(1, name);
+		preparedStatement.setString(2, dateStr);
+		preparedStatement.setInt(3, quantity);
+		preparedStatement.setString(4, section.toString());
 		preparedStatement.executeUpdate();
+		ResultSet rsNext = preparedStatement.getGeneratedKeys();
+		if (rsNext.next()) {
+			return rsNext.getInt(1);
+		}
 
 		// retrieving & returning last inserted record id
 		ResultSet rs = statement.executeQuery("SELECT LAST_INSERT_ID()");
@@ -253,7 +265,7 @@ public class WarehouseDSC {
 		 * NOTE: method should return instance of product
 		 */	
 		preparedStatement = connection.prepareStatement(queryString);
-		preparedStatement.setInt(1, id);
+		//preparedStatement.setInt(1, id);
 		try {
 			preparedStatement.executeUpdate();
 		}
@@ -286,7 +298,7 @@ public class WarehouseDSC {
 		else
 		{
 			preparedStatement = connection.prepareStatement(queryString);
-			preparedStatement.setInt(1, id);
+			//preparedStatement.setInt(1, id);
 			return preparedStatement.executeUpdate();
 		}
 
