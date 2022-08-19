@@ -192,12 +192,12 @@ public class WarehouseFX extends Application {
 		 * - setOnAction on the "Show Expire Only" Checkbox to clear and 
 		 *   set focus to the filter text field
 		 */
+		
 		checkBox.setOnAction((e) ->
 		{
 			filterTF.clear();
 			filterTF.requestFocus();
 		});
-
 
 		/* TODO 2-11 - TO COMPLETE ****************************************
 		 * filter container - part 3:
@@ -209,42 +209,78 @@ public class WarehouseFX extends Application {
 		 *   of filtered list
 		 */
 
-		
-		
-		//  FilteredList<Product> filteredList = new FilteredList<>(tableData, p -> true);
-		//  SortedList<Product> sortedList = new SortedList<>(filteredList);
-		//  sortedList.comparatorProperty().bind(tableView.comparatorProperty());
-		//  tableView.setItems(sortedList);
-		//  filterTF.textProperty().addListener((observable, oldValue, newValue) ->
-		//  {
-		// 	filteredList.setPredicate(product ->
-		// 	{
-		// 		if(newValue == null || newValue.isEmpty())
-		// 		{
-		// 			return true;
-		// 		}
+			FilteredList<Product> filteredList = new FilteredList<>(tableData, p -> true);
+			SortedList<Product> sortedList = new SortedList<>(filteredList);
+			sortedList.comparatorProperty().bind(tableView.comparatorProperty());
+			tableView.setItems(sortedList);
+			
+			filterTF.textProperty().addListener((observable, oldValue, newValue) ->
+			{
+				filteredList.setPredicate(product ->
+				{
+					String filterString = newValue.toUpperCase();
+					if ((newValue == null || newValue.isEmpty()) && checkBox.isSelected() && product.getItem().canExpire() == true)
+					{
+						return true;
+					}
+					else if (newValue == null || newValue.isEmpty())
+					{
+						 return true;
+					}
 
-		// 		String filterString = newValue.toUpperCase();
+					
+					if(choiceBox.getValue() == choiceITEM && product.getItemName().toUpperCase().contains(filterString))
+					{
+						return true;
+					}
+					else if(choiceBox.getValue() == choiceSECTION && product.getSection().toString().contains(filterString))
+					{
+						return true;
+					}
+					else if(choiceBox.getValue() == choiceBOUGHT_DAYS_AGO && checkBox.isSelected() == false)
+					{
+						try
+						{
+							long testLong = Integer.parseInt(filterString);
+							//if(warehouseDSC.product.calcDaysAgo <= testLong)
+							if(warehouseDSC.calcDaysAgo(product.getDate()) <= testLong)
+							{
+								return true;
+							}
+						}
+						catch(Exception e)
+						{
 
-		// 		if(choiceBox.getValue() == choiceITEM && product.getItemName().toUpperCase().contains(filterString))
-		// 		{
-		// 			return true;
-		// 		}
-				
-				
-		// 		if(choiceBox.getValue() == choiceSECTION && product.getSection().toString().toUpperCase().contains(filterString))
-		// 		{
-		// 			return true;
-		// 		}
+						}
+					}
+					else if(choiceBox.getValue() == choiceBOUGHT_DAYS_AGO && checkBox.isSelected() == true)
+					{
 
-		// 		if(choiceBox.getValue() == choiceBOUGHT_DAYS_AGO  && product.getDateStr().toUpperCase().contains(filterString))
-		// 		{
-		// 			return true;
-		// 		}
+						try
+						{
+							long testLong = Integer.parseInt(filterString);
+							//if(warehouseDSC.product.calcDaysAgo <= testLong)
+							if(warehouseDSC.calcDaysAgo(product.getDate()) <= testLong && product.getItem().canExpire() == true)
+							{
+								return true;
+							}
+						}
+						catch(Exception e)
+						{
 
-		// 		return false;
-		// 	});
-		//  });
+						}
+					}
+
+					return false;
+				});
+			});
+
+			//if filterTF is null/empty and checkbox is selected/not disabled
+			/* if filterTF is null/empty
+			 * ->
+			 * 
+			 */
+
 
 
 		/* TODO 2-12 - TO COMPLETE ****************************************
