@@ -75,8 +75,8 @@ public class WarehouseFX extends Application {
 		ObservableList<Product> tableData = FXCollections.observableArrayList();
 
 		// Define table columns
-		TableColumn<Product, Integer> idColumn = new TableColumn<Product, Integer>("Id");
-		//TableColumn<Product, String> idColumn = new TableColumn<Product, String>("Id");
+		TableColumn<Product, String> idColumn = new TableColumn<Product, String>("Id");
+		//TableColumn<Product, Integer> idColumn = new TableColumn<Product, Integer>("Id");
 		TableColumn<Product, String> itemNameColumn = new TableColumn<Product, String>("Item");
 		TableColumn<Product, Integer> quantityColumn = new TableColumn<Product, Integer>("QTY");
 		TableColumn<Product, String> sectionColumn = new TableColumn<Product, String>("Section");
@@ -86,7 +86,8 @@ public class WarehouseFX extends Application {
 		 * for each column defined, call their setCellValueFactory method 
 		 * using an instance of PropertyValueFactory
 		 */
-		idColumn.setCellValueFactory(new PropertyValueFactory<Product, Integer>("Id"));
+		idColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("Id"));
+		//idColumn.setCellValueFactory(new PropertyValueFactory<Product, Integer>("Id"));
 		itemNameColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("ItemName"));
 		quantityColumn.setCellValueFactory(new PropertyValueFactory<Product, Integer>("quantity"));
 		sectionColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("Section"));
@@ -144,16 +145,16 @@ public class WarehouseFX extends Application {
 		TextField filterTF = new TextField();
 		Label filterLB = new Label("Filter By:");
 
-		String choice1 = "ITEM";
-		String choice2 = "SECTION";
-		String choice3 = "BOUGHT_DAYS_AGO";
-		ChoiceBox<String> choices = new ChoiceBox<String>();
-		choices.getItems().addAll(choice1, choice2, choice3);
+		String choiceITEM = "ITEM";
+		String choiceSECTION = "SECTION";
+		String choiceBOUGHT_DAYS_AGO = "BOUGHT_DAYS_AGO";
+		ChoiceBox<String> choiceBox = new ChoiceBox<String>();
+		choiceBox.getItems().addAll(choiceITEM, choiceSECTION, choiceBOUGHT_DAYS_AGO);
 
-		choices.setValue(choice1);
+		choiceBox.setValue(choiceITEM);
 
-		// CheckBox checkBox = new CheckBox("Show Expire Only");
-		// checkBox.setDisable(true);
+		 CheckBox checkBox = new CheckBox("Show Expire Only");
+		 checkBox.setDisable(true);
 	
 
 		/* TODO 2-09 - TO COMPLETE ****************************************
@@ -163,33 +164,24 @@ public class WarehouseFX extends Application {
 		 *   if "BOUGHT_DAYS_AGO" is selected
 		 */
 				// Add a change listener
-				choices.getSelectionModel().selectedItemProperty().addListener(
+				choiceBox.getSelectionModel().selectedItemProperty().addListener(
 					// ChangeListener
 					(ov, oldValue, newValue) ->
 					{
-						System.out.println("\n" + oldValue + " -> " + newValue);
-						System.out.println("current choice: " + choices.getValue());
-					});
+						//System.out.println("\n" + oldValue + " -> " + newValue);
+						filterTF.clear();
 
-		// choices.getSelectionModel().selectedIndexProperty().addListener(
-		// 	(ov, oldValue, newValue) ->
-		// 	{
-		// 		System.out.println("\n" + ov);
-		// 		System.out.println(oldValue + " -> " + newValue);
-		// 		System.out.println(choiceBox.getValue());
-		// 		if(choiceBox.getValue() == choiceBOUGHT_DAYS_AGO)
-		// 		{
-		// 			//checkBox.setDisable(false);
-		// 			//filterTF.clear();
-		// 			//filterTF.requestFocus();
-					
-		// 		}
-		// 		else
-		// 		{
-		// 			//checkBox.setDisable(true);
-		// 		}
-		// 	}
-		// );
+						if(choiceBox.getValue() == choiceBOUGHT_DAYS_AGO)
+						{
+							checkBox.setDisable(false);
+							filterTF.requestFocus();
+						}
+						else
+						{
+							checkBox.setDisable(true);
+							filterTF.requestFocus();
+						}
+					});
 
 		/* TODO 2-10 - TO COMPLETE ****************************************
 		 * filter container - part 2:
@@ -200,11 +192,11 @@ public class WarehouseFX extends Application {
 		 * - setOnAction on the "Show Expire Only" Checkbox to clear and 
 		 *   set focus to the filter text field
 		 */
-		// checkBox.setOnAction((e) ->
-		// {
-		// 	filterTF.clear();
-		// 	filterTF.requestFocus();
-		// });
+		checkBox.setOnAction((e) ->
+		{
+			filterTF.clear();
+			filterTF.requestFocus();
+		});
 
 
 		/* TODO 2-11 - TO COMPLETE ****************************************
@@ -215,7 +207,9 @@ public class WarehouseFX extends Application {
 		 * - set items of table view to be sorted list
 		 * - set a change listener to text field to set the filter predicate
 		 *   of filtered list
-		 */	
+		 */
+
+		
 		
 		//  FilteredList<Product> filteredList = new FilteredList<>(tableData, p -> true);
 		//  SortedList<Product> sortedList = new SortedList<>(filteredList);
@@ -294,7 +288,7 @@ public class WarehouseFX extends Application {
 		// SET UP the Stage
 		// =====================================================================
 		// Create scene and set stage
-		HBox filterHBox = new HBox(filterTF, filterLB, choices);
+		HBox filterHBox = new HBox(filterTF, filterLB, choiceBox, checkBox);
 
 		VBox root = new VBox();
 		root.getChildren().add(filterHBox);

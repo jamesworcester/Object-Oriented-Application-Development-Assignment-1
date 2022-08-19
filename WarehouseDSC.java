@@ -113,7 +113,7 @@ public class WarehouseDSC {
 			 * - pay attention about parsing the date string to LocalDate
 			 */
 			Item item = searchItem(rs.getString(2));
-			if(item == null) {
+			if(item.getName() == null) {
 				// may need to add more here to handle null values
 				throw new Exception("Exception: Product with id '"+id+"' does not have an associated Item name");
 			}
@@ -174,7 +174,7 @@ public class WarehouseDSC {
 		{
 			int id = rs.getInt(1);
 			Item item = searchItem(rs.getString(2));
-			if(item == null) {
+			if(item.getName() == null) {
 				//may need to add more here to handle null values
 				throw new Exception("Exception: Product with id '"+id+"' does not have an associated Item name");
 			}
@@ -197,7 +197,7 @@ public class WarehouseDSC {
 		// NOTE: should we check if itemName (argument name) exists in item table?
 		//		--> adding a product with a non-existing item name should through an exception
 		Item item = searchItem(name);
-		if(item == null)
+		if(item.getName() == null)
 		{
 			throw new Exception("Exception: No Item with name '"+name+"' exists in the item table");
 		}
@@ -211,10 +211,7 @@ public class WarehouseDSC {
 		 * - preparedStatement to add arguments to the queryString
 		 * - resultSet to executeUpdate the preparedStatement query
 		 */
-		//preparedStatement = connection.prepareStatement(command);
 		preparedStatement = connection.prepareStatement(command, Statement.RETURN_GENERATED_KEYS);
-
-		//prepared statement auto_increment id sql database
 
 		
 
