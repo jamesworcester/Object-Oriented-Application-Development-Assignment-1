@@ -33,7 +33,15 @@ public class WarehouseFX extends Application {
 		 * call the data source controller database connect method
 		 * NOTE: that database connect method throws exception
 		 */
-		warehouseDSC.connect();
+		try
+		{
+			warehouseDSC.connect();
+		}
+		catch(Exception e)
+		{
+			System.out.println(e);
+		}
+		
 
 	}
 
@@ -79,10 +87,10 @@ public class WarehouseFX extends Application {
 		 * using an instance of PropertyValueFactory
 		 */
 		idColumn.setCellValueFactory(new PropertyValueFactory<Product, Integer>("Id"));
-		itemNameColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("Item"));
-		quantityColumn.setCellValueFactory(new PropertyValueFactory<Product, Integer>("QTY"));
+		itemNameColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("ItemName"));
+		quantityColumn.setCellValueFactory(new PropertyValueFactory<Product, Integer>("quantity"));
 		sectionColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("Section"));
-		daysAgoColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("Bought"));
+		daysAgoColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("DaysAgo"));
 
 		// Create the table view and add table columns to it
 		TableView<Product> tableView = new TableView<Product>();
@@ -104,16 +112,16 @@ public class WarehouseFX extends Application {
 		/* TODO 2-06 - TO COMPLETE ****************************************
 		 * set minimum and maximum width to the table view and each columns
 		 */
-		idColumn.setMinWidth(50);
-		idColumn.setMaxWidth(50);
-		itemNameColumn.setMinWidth(150);
-		itemNameColumn.setMaxWidth(150);
-		quantityColumn.setMinWidth(50);
-		quantityColumn.setMaxWidth(50);
-		sectionColumn.setMinWidth(100);
-		sectionColumn.setMaxWidth(100);
-		daysAgoColumn.setMinWidth(100);
-		daysAgoColumn.setMaxWidth(100);
+		idColumn.setMinWidth(100);
+		idColumn.setMaxWidth(100);
+		itemNameColumn.setMinWidth(300);
+		itemNameColumn.setMaxWidth(300);
+		quantityColumn.setMinWidth(100);
+		quantityColumn.setMaxWidth(100);
+		sectionColumn.setMinWidth(200);
+		sectionColumn.setMaxWidth(200);
+		daysAgoColumn.setMinWidth(300);
+		daysAgoColumn.setMaxWidth(300);
 
 
 		/* TODO 2-07 - TO COMPLETE ****************************************
@@ -121,6 +129,7 @@ public class WarehouseFX extends Application {
 		 * all products to table data observable list
 		 */
 		tableData.addAll(warehouseDSC.getAllProducts());
+		
 
 		// =====================================================
 		// ADD the remaining UI elements
@@ -135,15 +144,16 @@ public class WarehouseFX extends Application {
 		TextField filterTF = new TextField();
 		Label filterLB = new Label("Filter By:");
 
-		String choiceITEM = "ITEM";
-		String choiceSECTION = "SECTION";
-		String choiceBOUGHT_DAYS_AGO = "BOUGHT_DAYS_AGO";
-		ChoiceBox<String> choiceBox = new ChoiceBox<String>();
-		choiceBox.getItems().addAll(choiceITEM, choiceSECTION, choiceBOUGHT_DAYS_AGO);
-		choiceBox.setValue(choiceITEM);
+		String choice1 = "ITEM";
+		String choice2 = "SECTION";
+		String choice3 = "BOUGHT_DAYS_AGO";
+		ChoiceBox<String> choices = new ChoiceBox<String>();
+		choices.getItems().addAll(choice1, choice2, choice3);
 
-		CheckBox checkBox = new CheckBox("Show Expire Only");
-		checkBox.setDisable(true);
+		choices.setValue(choice1);
+
+		// CheckBox checkBox = new CheckBox("Show Expire Only");
+		// checkBox.setDisable(true);
 	
 
 		/* TODO 2-09 - TO COMPLETE ****************************************
@@ -152,22 +162,34 @@ public class WarehouseFX extends Application {
 		 *   text field vlaue and to enable the "Show Expire Only" CheckBox
 		 *   if "BOUGHT_DAYS_AGO" is selected
 		 */
-		choiceBox.getSelectionModel().selectedIndexProperty().addListener(
-			(ov, oldValue, newValue) ->
-			{
-				if(choiceBox.getValue() == choiceBOUGHT_DAYS_AGO)
-				{
-					checkBox.setDisable(false);
-					filterTF.clear();
-					filterTF.requestFocus();
+				// Add a change listener
+				choices.getSelectionModel().selectedItemProperty().addListener(
+					// ChangeListener
+					(ov, oldValue, newValue) ->
+					{
+						System.out.println("\n" + oldValue + " -> " + newValue);
+						System.out.println("current choice: " + choices.getValue());
+					});
+
+		// choices.getSelectionModel().selectedIndexProperty().addListener(
+		// 	(ov, oldValue, newValue) ->
+		// 	{
+		// 		System.out.println("\n" + ov);
+		// 		System.out.println(oldValue + " -> " + newValue);
+		// 		System.out.println(choiceBox.getValue());
+		// 		if(choiceBox.getValue() == choiceBOUGHT_DAYS_AGO)
+		// 		{
+		// 			//checkBox.setDisable(false);
+		// 			//filterTF.clear();
+		// 			//filterTF.requestFocus();
 					
-				}
-				else
-				{
-					checkBox.setDisable(true);
-				}
-			}
-		);
+		// 		}
+		// 		else
+		// 		{
+		// 			//checkBox.setDisable(true);
+		// 		}
+		// 	}
+		// );
 
 		/* TODO 2-10 - TO COMPLETE ****************************************
 		 * filter container - part 2:
@@ -178,11 +200,11 @@ public class WarehouseFX extends Application {
 		 * - setOnAction on the "Show Expire Only" Checkbox to clear and 
 		 *   set focus to the filter text field
 		 */
-		checkBox.setOnAction((e) ->
-		{
-			filterTF.clear();
-			filterTF.requestFocus();
-		});
+		// checkBox.setOnAction((e) ->
+		// {
+		// 	filterTF.clear();
+		// 	filterTF.requestFocus();
+		// });
 
 
 		/* TODO 2-11 - TO COMPLETE ****************************************
@@ -195,40 +217,40 @@ public class WarehouseFX extends Application {
 		 *   of filtered list
 		 */	
 		
-		 FilteredList<Product> filteredList = new FilteredList<>(tableData, p -> true);
-		 SortedList<Product> sortedList = new SortedList<>(filteredList);
-		 sortedList.comparatorProperty().bind(tableView.comparatorProperty());
-		 tableView.setItems(sortedList);
-		 filterTF.textProperty().addListener((observable, oldValue, newValue) ->
-		 {
-			filteredList.setPredicate(product ->
-			{
-				if(newValue == null || newValue.isEmpty())
-				{
-					return true;
-				}
+		//  FilteredList<Product> filteredList = new FilteredList<>(tableData, p -> true);
+		//  SortedList<Product> sortedList = new SortedList<>(filteredList);
+		//  sortedList.comparatorProperty().bind(tableView.comparatorProperty());
+		//  tableView.setItems(sortedList);
+		//  filterTF.textProperty().addListener((observable, oldValue, newValue) ->
+		//  {
+		// 	filteredList.setPredicate(product ->
+		// 	{
+		// 		if(newValue == null || newValue.isEmpty())
+		// 		{
+		// 			return true;
+		// 		}
 
-				String filterString = newValue.toUpperCase();
+		// 		String filterString = newValue.toUpperCase();
 
-				if(choiceBox.getValue() == choiceITEM && product.getItemName().toUpperCase().contains(filterString))
-				{
-					return true;
-				}
+		// 		if(choiceBox.getValue() == choiceITEM && product.getItemName().toUpperCase().contains(filterString))
+		// 		{
+		// 			return true;
+		// 		}
 				
 				
-				if(choiceBox.getValue() == choiceSECTION && product.getSection().toString().toUpperCase().contains(filterString))
-				{
-					return true;
-				}
+		// 		if(choiceBox.getValue() == choiceSECTION && product.getSection().toString().toUpperCase().contains(filterString))
+		// 		{
+		// 			return true;
+		// 		}
 
-				if(choiceBox.getValue() == choiceBOUGHT_DAYS_AGO  && product.getDateStr().toUpperCase().contains(filterString))
-				{
-					return true;
-				}
+		// 		if(choiceBox.getValue() == choiceBOUGHT_DAYS_AGO  && product.getDateStr().toUpperCase().contains(filterString))
+		// 		{
+		// 			return true;
+		// 		}
 
-				return false;
-			});
-		 });
+		// 		return false;
+		// 	});
+		//  });
 
 
 		/* TODO 2-12 - TO COMPLETE ****************************************
@@ -272,7 +294,7 @@ public class WarehouseFX extends Application {
 		// SET UP the Stage
 		// =====================================================================
 		// Create scene and set stage
-		HBox filterHBox = new HBox(filterTF, filterLB, choiceBox, checkBox);
+		HBox filterHBox = new HBox(filterTF, filterLB, choices);
 
 		VBox root = new VBox();
 		root.getChildren().add(filterHBox);
