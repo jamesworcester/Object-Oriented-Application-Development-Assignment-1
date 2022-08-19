@@ -275,14 +275,6 @@ public class WarehouseFX extends Application {
 				});
 			});
 
-			//if filterTF is null/empty and checkbox is selected/not disabled
-			/* if filterTF is null/empty
-			 * ->
-			 * 
-			 */
-
-
-
 		/* TODO 2-12 - TO COMPLETE ****************************************
 		 * ACTION buttons: ADD, UPDATE ONE, DELETE
 		 * - ADD button sets the add UI elements to visible;
@@ -299,11 +291,40 @@ public class WarehouseFX extends Application {
 		List<Item> items = warehouseDSC.getAllItems();
 		ComboBox<Item> comboBox = new ComboBox<Item>();
 		comboBox.getItems().addAll(items);
-		comboBox.setVisible(false);
+
+		ChoiceBox<WarehouseDSC.SECTION> sectionChoiceBox = new ChoiceBox<WarehouseDSC.SECTION>();
+		sectionChoiceBox.getItems().setAll(WarehouseDSC.SECTION.values());
+		TextField quantityTF = new TextField();
+
+		Button ClearBT = new Button("CLEAR");
+		Button SaveBT = new Button("SAVE");
 		
-		AddBT.setOnAction(e ->
+		SaveBT.setOnAction(e ->
 		{
-			comboBox.setVisible(true);
+			if(comboBox.getValue() == null || sectionChoiceBox.getValue() == null || quantityTF.getText() == null)
+			{
+				Alert alert = new Alert(Alert.AlertType.INFORMATION);
+				alert.setContentText("Please select an item, section and quantity");
+				alert.showAndWait();
+			}
+			else
+			{
+				try
+				{
+					int quantityInt = Integer.parseInt(quantityTF.getText());
+					int productId = warehouseDSC.addProduct(comboBox.getValue().getName(), quantityInt, sectionChoiceBox.getValue());
+					Product product = warehouseDSC.searchProduct(productId);
+					tableData.add(product);
+				}
+				catch(Exception exception)
+				{
+					System.out.println("ERROR: Could not parse Int from quantityTF");
+				}
+				
+			}
+
+
+			
 		});
 		 	
 
@@ -326,9 +347,26 @@ public class WarehouseFX extends Application {
 		// Create scene and set stage
 		HBox filterHBox = new HBox(filterTF, filterLB, choiceBox, checkBox);
 
+		HBox addUpdateDeleteHBox = new HBox(AddBT, UpdateOneBT, DeleteBT);
+
+		HBox hiddenContainer1 = new HBox(comboBox, sectionChoiceBox, quantityTF);
+		hiddenContainer1.setVisible(false);
+
+		HBox hiddenContainer2 = new HBox(ClearBT, SaveBT);
+		hiddenContainer2.setVisible(false);
+
+		AddBT.setOnAction(e ->
+		{
+			hiddenContainer1.setVisible(true);
+			hiddenContainer2.setVisible(true);
+		});
+
 		VBox root = new VBox();
 		root.getChildren().add(filterHBox);
 		root.getChildren().add(tableView);
+		root.getChildren().add(addUpdateDeleteHBox);
+		root.getChildren().add(hiddenContainer1);
+		root.getChildren().add(hiddenContainer2);
 
 		/* TODO 2-14 - TO COMPLETE ****************************************
 		 * - add all your containers, controls to the root
