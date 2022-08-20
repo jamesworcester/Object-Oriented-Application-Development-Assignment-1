@@ -361,6 +361,24 @@ public class WarehouseFX extends Application {
 			hiddenContainer2.setVisible(true);
 		});
 
+		UpdateOneBT.setOnAction(e ->
+		{
+			Product product = tableView.getSelectionModel().getSelectedItem();
+			try
+			{
+				product.updateQuantity();
+				tableView.getColumns().get(0).setVisible(false);
+				tableView.getColumns().get(0).setVisible(true);
+
+			}
+			catch(Exception exceptionUpdate)
+			{
+				Alert alert = new Alert(Alert.AlertType.ERROR);
+				alert.setContentText(exceptionUpdate.toString());
+				alert.showAndWait();
+			}
+		});
+
 		VBox root = new VBox();
 		root.getChildren().add(filterHBox);
 		root.getChildren().add(tableView);
