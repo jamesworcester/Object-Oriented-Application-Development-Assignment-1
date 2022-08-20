@@ -187,7 +187,6 @@ public class WarehouseFX extends Application {
 					// ChangeListener
 					(ov, oldValue, newValue) ->
 					{
-						//System.out.println("\n" + oldValue + " -> " + newValue);
 						filterTF.clear();
 
 						if(choiceBox.getValue() == choiceBOUGHT_DAYS_AGO)
@@ -261,7 +260,6 @@ public class WarehouseFX extends Application {
 						try
 						{
 							long testLong = Integer.parseInt(filterString);
-							//if(warehouseDSC.product.calcDaysAgo <= testLong)
 							if(warehouseDSC.calcDaysAgo(product.getDate()) <= testLong)
 							{
 								return true;
@@ -269,16 +267,14 @@ public class WarehouseFX extends Application {
 						}
 						catch(Exception e)
 						{
-
+							return false;
 						}
 					}
 					else if(choiceBox.getValue() == choiceBOUGHT_DAYS_AGO && checkBox.isSelected() == true)
 					{
-
 						try
 						{
 							long testLong = Integer.parseInt(filterString);
-							//if(warehouseDSC.product.calcDaysAgo <= testLong)
 							if(warehouseDSC.calcDaysAgo(product.getDate()) <= testLong && product.getItem().canExpire() == true)
 							{
 								return true;
@@ -286,10 +282,9 @@ public class WarehouseFX extends Application {
 						}
 						catch(Exception e)
 						{
-
+							return false;
 						}
 					}
-
 					return false;
 				});
 			});
@@ -322,7 +317,6 @@ public class WarehouseFX extends Application {
 		sectionChoiceBox.setMaxWidth(150);
 		sectionChoiceBox.setMinWidth(150);
 
-
 		TextField quantityTF = new TextField();
 		quantityTF.setMaxWidth(100);
 		quantityTF.setMinWidth(100);
@@ -336,7 +330,6 @@ public class WarehouseFX extends Application {
 
 		HBox addUpdateDeleteHBox = new HBox(addBT, updateOneBT, deleteBT);
 
-
 		VBox hidden1VBox = new VBox(itemLB, comboBox);
 		VBox hidden2VBox = new VBox(sectionLB, sectionChoiceBox);
 		VBox hidden3VBox = new VBox(QuantityLB, quantityTF);
@@ -345,7 +338,6 @@ public class WarehouseFX extends Application {
 		hiddenContainer1.setSpacing(10);
 		hiddenContainer1.setAlignment(Pos.CENTER);
 		hiddenContainer1.setVisible(false);
-	
 
 		HBox hiddenContainer2 = new HBox(clearBT, saveBT);
 		hiddenContainer2.setAlignment(Pos.CENTER);
@@ -356,7 +348,7 @@ public class WarehouseFX extends Application {
 			if(comboBox.getValue() == null || sectionChoiceBox.getValue() == null || quantityTF.getText() == null)
 			{
 				Alert alert = new Alert(Alert.AlertType.INFORMATION);
-				alert.setContentText("Please select an item, section and quantity");
+				alert.setContentText("Please select an item, section and enter a quantity");
 				alert.showAndWait();
 			}
 			else
@@ -364,7 +356,6 @@ public class WarehouseFX extends Application {
 				try
 				{
 					int quantityInt = Integer.parseInt(quantityTF.getText());
-					//int productId = warehouseDSC.addProduct(comboBox.getValue().getName(), quantityInt, sectionChoiceBox.getValue());
 					try
 					{
 						Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -396,14 +387,9 @@ public class WarehouseFX extends Application {
 					alert.setContentText("Please enter an integer into the Quantity field");
 					alert.showAndWait();
 				}
-				
 			}
-
-
-			
 		});
 		 	
-
 		/* TODO 2-13 - TO COMPLETE ****************************************
 		 * add input controls and container(s)
 		 * - Item will list item data from the data source controller list
@@ -443,7 +429,6 @@ public class WarehouseFX extends Application {
 					product.updateQuantity();
 					tableView.getColumns().get(0).setVisible(false);
 					tableView.getColumns().get(0).setVisible(true);
-	
 				}
 				catch(Exception exceptionUpdate)
 				{
@@ -524,6 +509,5 @@ public class WarehouseFX extends Application {
 			alert.setContentText("ERROR: " + e);
 			alert.showAndWait();
 		}
-
 	}	
 }
