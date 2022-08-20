@@ -1,3 +1,10 @@
+/*
+ * Name: James WORCESTER
+ * Student ID: 20767086
+ * Username: 20767086@students.latrobe.edu.au
+ * Subject Code: CSE3OAD
+ */
+
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -8,6 +15,7 @@ import java.util.*;
 import java.io.*;
 import javafx.collections.*;
 import javafx.collections.transformation.*;
+import javafx.geometry.Pos;
 import javafx.scene.control.cell.*;
 import javafx.beans.property.*;
 
@@ -39,7 +47,10 @@ public class WarehouseFX extends Application {
 		}
 		catch(Exception e)
 		{
-			System.out.println(e);
+			System.out.println("ERROR: " + e);
+			Alert alert = new Alert(Alert.AlertType.INFORMATION);
+			alert.setContentText("ERROR: " + e);
+			alert.showAndWait();
 		}
 		
 
@@ -113,16 +124,16 @@ public class WarehouseFX extends Application {
 		/* TODO 2-06 - TO COMPLETE ****************************************
 		 * set minimum and maximum width to the table view and each columns
 		 */
-		idColumn.setMinWidth(100);
-		idColumn.setMaxWidth(100);
-		itemNameColumn.setMinWidth(300);
-		itemNameColumn.setMaxWidth(300);
-		quantityColumn.setMinWidth(100);
-		quantityColumn.setMaxWidth(100);
-		sectionColumn.setMinWidth(200);
-		sectionColumn.setMaxWidth(200);
-		daysAgoColumn.setMinWidth(300);
-		daysAgoColumn.setMaxWidth(300);
+		idColumn.setMinWidth(50);
+		idColumn.setMaxWidth(50);
+		itemNameColumn.setMinWidth(200);
+		itemNameColumn.setMaxWidth(200);
+		quantityColumn.setMinWidth(50);
+		quantityColumn.setMaxWidth(50);
+		sectionColumn.setMinWidth(120);
+		sectionColumn.setMaxWidth(120);
+		daysAgoColumn.setMinWidth(120);
+		daysAgoColumn.setMaxWidth(120);
 
 
 		/* TODO 2-07 - TO COMPLETE ****************************************
@@ -143,7 +154,11 @@ public class WarehouseFX extends Application {
 		 * add all filter related UI elements you identified
 		 */
 		TextField filterTF = new TextField();
+		filterTF.setMaxWidth(200);
+		filterTF.setMinWidth(200);
 		Label filterLB = new Label("Filter By:");
+		filterLB.setMaxWidth(80);
+		filterLB.setMinWidth(80);
 
 		String choiceITEM = "ITEM";
 		String choiceSECTION = "SECTION";
@@ -152,9 +167,13 @@ public class WarehouseFX extends Application {
 		choiceBox.getItems().addAll(choiceITEM, choiceSECTION, choiceBOUGHT_DAYS_AGO);
 
 		choiceBox.setValue(choiceITEM);
+		choiceBox.setMaxWidth(230);
+		choiceBox.setMinWidth(230);
 
 		 CheckBox checkBox = new CheckBox("Show Expire Only");
 		 checkBox.setDisable(true);
+		 checkBox.setMaxWidth(200);
+		 checkBox.setMinWidth(200);
 	
 
 		/* TODO 2-09 - TO COMPLETE ****************************************
@@ -288,16 +307,49 @@ public class WarehouseFX extends Application {
 		Button updateOneBT = new Button("UPDATE ONE");
 		Button deleteBT = new Button("DELETE");
 
+		Label itemLB = new Label("Item");
+		Label sectionLB = new Label("Section");
+		Label QuantityLB = new Label("Quantity");
+
 		List<Item> items = warehouseDSC.getAllItems();
 		ComboBox<Item> comboBox = new ComboBox<Item>();
 		comboBox.getItems().addAll(items);
+		comboBox.setMaxWidth(400);
+		comboBox.setMinWidth(400);
 
 		ChoiceBox<WarehouseDSC.SECTION> sectionChoiceBox = new ChoiceBox<WarehouseDSC.SECTION>();
 		sectionChoiceBox.getItems().setAll(WarehouseDSC.SECTION.values());
+		sectionChoiceBox.setMaxWidth(150);
+		sectionChoiceBox.setMinWidth(150);
+
+
 		TextField quantityTF = new TextField();
+		quantityTF.setMaxWidth(100);
+		quantityTF.setMinWidth(100);
 
 		Button clearBT = new Button("CLEAR");
 		Button saveBT = new Button("SAVE");
+
+		HBox filterHBox = new HBox(filterTF, filterLB, choiceBox, checkBox);
+		filterHBox.setAlignment(Pos.CENTER_LEFT);
+		filterHBox.setSpacing(10);
+
+		HBox addUpdateDeleteHBox = new HBox(addBT, updateOneBT, deleteBT);
+
+
+		VBox hidden1VBox = new VBox(itemLB, comboBox);
+		VBox hidden2VBox = new VBox(sectionLB, sectionChoiceBox);
+		VBox hidden3VBox = new VBox(QuantityLB, quantityTF);
+
+		HBox hiddenContainer1 = new HBox(hidden1VBox, hidden2VBox, hidden3VBox);
+		hiddenContainer1.setSpacing(10);
+		hiddenContainer1.setAlignment(Pos.CENTER);
+		hiddenContainer1.setVisible(false);
+	
+
+		HBox hiddenContainer2 = new HBox(clearBT, saveBT);
+		hiddenContainer2.setAlignment(Pos.CENTER);
+		hiddenContainer2.setVisible(false);
 		
 		saveBT.setOnAction(e ->
 		{
@@ -312,11 +364,24 @@ public class WarehouseFX extends Application {
 				try
 				{
 					int quantityInt = Integer.parseInt(quantityTF.getText());
-					int productId = warehouseDSC.addProduct(comboBox.getValue().getName(), quantityInt, sectionChoiceBox.getValue());
+					//int productId = warehouseDSC.addProduct(comboBox.getValue().getName(), quantityInt, sectionChoiceBox.getValue());
 					try
 					{
-						Product product = warehouseDSC.searchProduct(productId);
-						tableData.add(product);
+						Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+						alert.setContentText("Are you sure? Add selected product?");
+						Optional<ButtonType> result = alert.showAndWait();
+						if (result.isPresent() && result.get() == ButtonType.OK) 
+						{
+							int productId = warehouseDSC.addProduct(comboBox.getValue().getName(), quantityInt, sectionChoiceBox.getValue());
+							Product product = warehouseDSC.searchProduct(productId);
+							tableData.add(product);
+							hiddenContainer1.setVisible(false);
+							hiddenContainer2.setVisible(false);
+							comboBox.valueProperty().set(null);
+							sectionChoiceBox.valueProperty().set(null);
+							quantityTF.setText(null);
+						}
+						
 					}
 					catch(Exception searchProductException)
 					{
@@ -327,7 +392,9 @@ public class WarehouseFX extends Application {
 				}
 				catch(Exception exception)
 				{
-					System.out.println("ERROR: Could not parse Int from quantityTF");
+					Alert alert = new Alert(Alert.AlertType.INFORMATION);
+					alert.setContentText("Please enter an integer into the Quantity field");
+					alert.showAndWait();
 				}
 				
 			}
@@ -354,15 +421,7 @@ public class WarehouseFX extends Application {
 		// SET UP the Stage
 		// =====================================================================
 		// Create scene and set stage
-		HBox filterHBox = new HBox(filterTF, filterLB, choiceBox, checkBox);
-
-		HBox addUpdateDeleteHBox = new HBox(addBT, updateOneBT, deleteBT);
-
-		HBox hiddenContainer1 = new HBox(comboBox, sectionChoiceBox, quantityTF);
-		hiddenContainer1.setVisible(false);
-
-		HBox hiddenContainer2 = new HBox(clearBT, saveBT);
-		hiddenContainer2.setVisible(false);
+		
 
 		addBT.setOnAction(e ->
 		{
@@ -373,19 +432,28 @@ public class WarehouseFX extends Application {
 		updateOneBT.setOnAction(e ->
 		{
 			Product product = tableView.getSelectionModel().getSelectedItem();
-			try
+			Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+			alert.setContentText("Are you sure? Update the selected product?");
+			Optional<ButtonType> result = alert.showAndWait();
+			if (result.isPresent() && result.get() == ButtonType.OK) 
 			{
-				product.updateQuantity();
-				tableView.getColumns().get(0).setVisible(false);
-				tableView.getColumns().get(0).setVisible(true);
+				try
+				{
+					warehouseDSC.useProduct(product.getId());
+					product.updateQuantity();
+					tableView.getColumns().get(0).setVisible(false);
+					tableView.getColumns().get(0).setVisible(true);
+	
+				}
+				catch(Exception exceptionUpdate)
+				{
+					Alert alert2 = new Alert(Alert.AlertType.ERROR);
+					alert2.setContentText(exceptionUpdate.getMessage());
+					alert2.showAndWait();
+				}
+			}
 
-			}
-			catch(Exception exceptionUpdate)
-			{
-				Alert alert = new Alert(Alert.AlertType.ERROR);
-				alert.setContentText(exceptionUpdate.toString());
-				alert.showAndWait();
-			}
+
 		});
 
 		deleteBT.setOnAction(e ->
@@ -406,7 +474,9 @@ public class WarehouseFX extends Application {
 			}
 			catch(Exception exceptionDelete)
 			{
-				System.out.println(exceptionDelete.toString());
+				Alert alert2 = new Alert(Alert.AlertType.ERROR);
+				alert2.setContentText(exceptionDelete.getMessage());
+				alert2.showAndWait();
 			}
 		});
 
@@ -442,6 +512,18 @@ public class WarehouseFX extends Application {
 		/* TODO 2-15 - TO COMPLETE ****************************************
 		 * call the data source controller database disconnect method
 		 * NOTE: that database disconnect method throws exception
-		 */				
+		 */
+		try
+		{
+			warehouseDSC.disconnect();
+		}
+		catch(Exception e)
+		{
+			System.out.println("ERROR: " + e);
+			Alert alert = new Alert(Alert.AlertType.INFORMATION);
+			alert.setContentText("ERROR: " + e);
+			alert.showAndWait();
+		}
+
 	}	
 }

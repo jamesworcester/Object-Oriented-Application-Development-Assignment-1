@@ -1,3 +1,10 @@
+/*
+ * Name: James WORCESTER
+ * Student ID: 20767086
+ * Username: 20767086@students.latrobe.edu.au
+ * Subject Code: CSE3OAD
+ */
+
 public class Item {
 
 	// name is the unique id

@@ -1,3 +1,10 @@
+/*
+ * Name: James WORCESTER
+ * Student ID: 20767086
+ * Username: 20767086@students.latrobe.edu.au
+ * Subject Code: CSE3OAD
+ */
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
