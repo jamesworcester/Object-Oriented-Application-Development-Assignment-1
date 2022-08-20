@@ -284,9 +284,9 @@ public class WarehouseFX extends Application {
 		 *   table view row has been selected first before doing their
 		 *   action; hint: should you also use an Alert confirmation?
 		 */	
-		Button AddBT = new Button("ADD");
-		Button UpdateOneBT = new Button("UPDATE ONE");
-		Button DeleteBT = new Button("DELETE");
+		Button addBT = new Button("ADD");
+		Button updateOneBT = new Button("UPDATE ONE");
+		Button deleteBT = new Button("DELETE");
 
 		List<Item> items = warehouseDSC.getAllItems();
 		ComboBox<Item> comboBox = new ComboBox<Item>();
@@ -296,10 +296,10 @@ public class WarehouseFX extends Application {
 		sectionChoiceBox.getItems().setAll(WarehouseDSC.SECTION.values());
 		TextField quantityTF = new TextField();
 
-		Button ClearBT = new Button("CLEAR");
-		Button SaveBT = new Button("SAVE");
+		Button clearBT = new Button("CLEAR");
+		Button saveBT = new Button("SAVE");
 		
-		SaveBT.setOnAction(e ->
+		saveBT.setOnAction(e ->
 		{
 			if(comboBox.getValue() == null || sectionChoiceBox.getValue() == null || quantityTF.getText() == null)
 			{
@@ -347,21 +347,21 @@ public class WarehouseFX extends Application {
 		// Create scene and set stage
 		HBox filterHBox = new HBox(filterTF, filterLB, choiceBox, checkBox);
 
-		HBox addUpdateDeleteHBox = new HBox(AddBT, UpdateOneBT, DeleteBT);
+		HBox addUpdateDeleteHBox = new HBox(addBT, updateOneBT, deleteBT);
 
 		HBox hiddenContainer1 = new HBox(comboBox, sectionChoiceBox, quantityTF);
 		hiddenContainer1.setVisible(false);
 
-		HBox hiddenContainer2 = new HBox(ClearBT, SaveBT);
+		HBox hiddenContainer2 = new HBox(clearBT, saveBT);
 		hiddenContainer2.setVisible(false);
 
-		AddBT.setOnAction(e ->
+		addBT.setOnAction(e ->
 		{
 			hiddenContainer1.setVisible(true);
 			hiddenContainer2.setVisible(true);
 		});
 
-		UpdateOneBT.setOnAction(e ->
+		updateOneBT.setOnAction(e ->
 		{
 			Product product = tableView.getSelectionModel().getSelectedItem();
 			try
@@ -377,6 +377,35 @@ public class WarehouseFX extends Application {
 				alert.setContentText(exceptionUpdate.toString());
 				alert.showAndWait();
 			}
+		});
+
+		deleteBT.setOnAction(e ->
+		{
+			Product product = tableView.getSelectionModel().getSelectedItem();
+			try
+			{
+				Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+				alert.setContentText("Are you sure? Delete selected product?");
+				Optional<ButtonType> result = alert.showAndWait();
+				if (result.isPresent() && result.get() == ButtonType.OK) 
+				{
+					warehouseDSC.removeProduct(product.getId());
+					tableData.remove(product);
+					tableView.getColumns().get(0).setVisible(false);
+					tableView.getColumns().get(0).setVisible(true);
+				}
+			}
+			catch(Exception exceptionDelete)
+			{
+				System.out.println(exceptionDelete.toString());
+			}
+		});
+
+		clearBT.setOnAction(e ->
+		{
+			comboBox.valueProperty().set(null);
+			sectionChoiceBox.valueProperty().set(null);
+			quantityTF.setText(null);
 		});
 
 		VBox root = new VBox();
