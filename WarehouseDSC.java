@@ -112,16 +112,21 @@ public class WarehouseDSC {
 			 *   item table (use searchItem method)
 			 * - pay attention about parsing the date string to LocalDate
 			 */
-			Item item = searchItem(rs.getString(2));
-			if(item.getName() == null) {
-				// may need to add more here to handle null values
+			
+			try
+			{
+				Item item = searchItem(rs.getString(2));
+				String itemName = item.getName();
+				LocalDate date = LocalDate.parse(rs.getString(3), dtf);
+				int quantity = rs.getInt(4);
+				SECTION section = SECTION.valueOf(rs.getString(5));
+				
+				product = new Product(id, item, date, quantity, section);
+			}
+			catch(Exception e)
+			{
 				throw new Exception("Exception: Product with id '"+id+"' does not have an associated Item name");
 			}
-			LocalDate date = LocalDate.parse(rs.getString(3), dtf);
-			int quantity = rs.getInt(4);
-			SECTION section = SECTION.valueOf(rs.getString(5));
-			
-			product = new Product(id, item, date, quantity, section);
 		}
 
 		return product;
@@ -173,16 +178,21 @@ public class WarehouseDSC {
 		while (rs.next())
 		{
 			int id = rs.getInt(1);
-			Item item = searchItem(rs.getString(2));
-			if(item.getName() == null) {
-				//may need to add more here to handle null values
+			try
+			{
+				Item item = searchItem(rs.getString(2));
+				String itemName = item.getName();
+				LocalDate date = LocalDate.parse(rs.getString(3), dtf);
+				int quantity = rs.getInt(4);
+				SECTION section = SECTION.valueOf(rs.getString(5));
+	
+				products.add(new Product(id, item, date, quantity, section));
+
+			}
+			catch(Exception e)
+			{
 				throw new Exception("Exception: Product with id '"+id+"' does not have an associated Item name");
 			}
-			LocalDate date = LocalDate.parse(rs.getString(3), dtf);
-			int quantity = rs.getInt(4);
-			SECTION section = SECTION.valueOf(rs.getString(5));
-
-			products.add(new Product(id, item, date, quantity, section));
 		}
 
 		return products;
@@ -196,12 +206,15 @@ public class WarehouseDSC {
 		
 		// NOTE: should we check if itemName (argument name) exists in item table?
 		//		--> adding a product with a non-existing item name should through an exception
-		Item item = searchItem(name);
-		if(item.getName() == null)
+		try
+		{
+			Item item = searchItem(name);
+			String itemName = item.getName();
+		}
+		catch(Exception e)
 		{
 			throw new Exception("Exception: No Item with name '"+name+"' exists in the item table");
 		}
-
 
 		//String command = "INSERT INTO Product VALUES(?, ?, ?, ?, ?)";
 		String command = "INSERT INTO product (itemName, date, quantity, section) " +
@@ -213,8 +226,6 @@ public class WarehouseDSC {
 		 */
 		preparedStatement = connection.prepareStatement(command, Statement.RETURN_GENERATED_KEYS);
 
-		
-
 		//preparedStatement.setInt(1, 256);
 		preparedStatement.setString(1, name);
 		preparedStatement.setString(2, dateStr);
@@ -222,7 +233,8 @@ public class WarehouseDSC {
 		preparedStatement.setString(4, section.toString());
 		preparedStatement.executeUpdate();
 		ResultSet rsNext = preparedStatement.getGeneratedKeys();
-		if (rsNext.next()) {
+		if (rsNext.next()) 
+		{
 			return rsNext.getInt(1);
 		}
 
@@ -240,12 +252,30 @@ public class WarehouseDSC {
 		 * - search product by id
 		 * - check if has quantity is greater one; if not throw exception
 		 *   with adequate error message
-		 */		
-		Product product = searchProduct(id);
+		 */
+		Product product = searchProduct(id);		
+		try
+		{
+			product.getQuantity();
+		}
+		catch(Exception e)
+		{
+			throw new Exception("Exception: No product with id: '"+id+"' exists in the product table");
+		}
+
 		if(product.getQuantity() <= 1)
 		{
-			throw new Exception("Exception: The product with '"+id+"' has a quantity less than or equal to 1");
+			throw new Exception("Exception: The product with id: '"+id+"' has a quantity less than or equal to 1");
 		}
+		// try
+		// {
+
+		// }
+		// catch(Exception e)
+		// {
+		// 	throw new Exception("Exception: No product with id: '"+id+"' exists in the product table");
+		// }
+
 
 		String queryString = 
 			"UPDATE product " +
@@ -263,10 +293,12 @@ public class WarehouseDSC {
 		 */	
 		preparedStatement = connection.prepareStatement(queryString);
 		//preparedStatement.setInt(1, id);
-		try {
+		try 
+		{
 			preparedStatement.executeUpdate();
 		}
-		catch (Exception e){
+		catch (Exception e)
+		{
 			new Exception("Exception: The update did not effect affect a row");
 		}
 		Product product_updated = searchProduct(id);

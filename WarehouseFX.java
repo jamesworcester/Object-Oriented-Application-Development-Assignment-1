@@ -313,8 +313,17 @@ public class WarehouseFX extends Application {
 				{
 					int quantityInt = Integer.parseInt(quantityTF.getText());
 					int productId = warehouseDSC.addProduct(comboBox.getValue().getName(), quantityInt, sectionChoiceBox.getValue());
-					Product product = warehouseDSC.searchProduct(productId);
-					tableData.add(product);
+					try
+					{
+						Product product = warehouseDSC.searchProduct(productId);
+						tableData.add(product);
+					}
+					catch(Exception searchProductException)
+					{
+						Alert alert = new Alert(Alert.AlertType.ERROR);
+						alert.setContentText(searchProductException.getMessage());
+						alert.showAndWait();
+					}	
 				}
 				catch(Exception exception)
 				{
